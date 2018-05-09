@@ -1,10 +1,14 @@
 Requirements:
 
 $ apt-get install mongodb
+$ npm install
 
 
 Next steps:
-- use `get` route to pull info from the mongo db and return to user
+- document setting up db
+  - (maybe use a dbsetup route?)
+- set up config.js.tmpl and add config.js to .gitignore
+
 - set up connection to external source
 - pull name from external source
 - bundle name with pricing info and return to user
