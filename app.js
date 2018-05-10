@@ -5,7 +5,7 @@ var redsky = require('./redsky');
 var rp = require('request-promise');
 var MongoClient = require('mongodb').MongoClient;
 
-app.get('/', (req, res) => res.send('Hello Product Searcher.'))
+app.get('/', (req, res) => res.send('To use this application, search by product ID at http://localhost:3000/products/:id.  Try 16696652 to start.'))
 
 app.route('/dbsetup')
     .get( function (req, res) {
@@ -67,7 +67,6 @@ app.route('/products/:id')
                   .then( function( client ) {
                       var db = client.db("productPrices");
 
-                      // find query is broken for some reason
                       return db.collection("productPrices").find(
                           { "product_id": product_id }
                       ).toArray();
@@ -75,23 +74,28 @@ app.route('/products/:id')
                       if (result[0]) {
                           price_obj = result[0]['current_price'];
                       }
+                      // Check external source for name
                       return redsky.search(
                           product_id,
                           config.redsky_host,
                           config.redsky_path
                       )
                   }).then( function (name) {
-                      // then bundle them together into a json object
+                      // Then bundle them together into a json object
                       product_object = {
                           "id":req.params.id,
                           "name": name,
                           "current_price": price_obj
                       };
 
-                      // and return to the user
+                      // And return to the user
                       res.json(product_object);
                   }).catch (function (err) {
-                      console.log(err);
+                      error_object = {
+                          "error_message": "Sorry, there was an error processing your request.",
+                          "error_body": err
+                      }
+                      res.json(error_object);
                   });
           }
         )
@@ -104,5 +108,6 @@ app.route('/products/:id')
               res.send("Updated");
           }
         )
+
 
 app.listen(3000, () => console.log('MyRetail pricing app is running.'))
