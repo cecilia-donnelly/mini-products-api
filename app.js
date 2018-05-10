@@ -7,6 +7,55 @@ var MongoClient = require('mongodb').MongoClient;
 
 app.get('/', (req, res) => res.send('Hello Product Searcher.'))
 
+app.route('/dbsetup')
+    .get( function (req, res) {
+        var sample_data = [
+                    {
+                        "product_id": 15117729,
+                        "current_price": {"value": "5.14", "currency_code": "USD"}
+                    },
+                    {
+                        "product_id": 16483589,
+                        "current_price": {"value": "17.30", "currency_code": "USD"}
+                    },
+                    {
+                        "product_id": 16696652,
+                        "current_price": {"value": "8.99", "currency_code": "USD"}
+                    },
+                    {
+                        "product_id": 16752456,
+                        "current_price": {"value": "3.21", "currency_code": "USD"}
+                    },
+                    {
+                        "product_id": 15643793,
+                        "current_price": {"value": "9.00", "currency_code": "USD"}
+                    }
+        ];
+        console.log("DEBUG: setting up database.");
+        MongoClient.connect(config.db_url)
+            .then (function ( client ) {
+                var db = client.db("productPrices");
+                // Drop old data first to avoid duplicates.
+                db.collection('productPrices').drop();
+                // Add the basic set of sample data
+                db.collection("productPrices").insertMany(sample_data, function(err, result) {
+                    if (err){
+                        console.log(err);
+                    }
+                    console.log("Inserted 5 products.");
+                    res.json(sample_data);
+                })
+            })
+            .catch (function (err) {
+                console.log(err);
+                error_object = {
+                    "error_message": "Sorry, there was an error processing your request.",
+                    "error_body": err
+                }
+                res.json(error_object);
+            });
+    })
+
 app.route('/products/:id')
     .get( function (req, res)
           {
