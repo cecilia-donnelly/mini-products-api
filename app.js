@@ -110,4 +110,4 @@ app.route('/products/:id')
         )
 
 
-app.listen(3000, () => console.log('MyRetail pricing app is running.'))
+module.exports = app

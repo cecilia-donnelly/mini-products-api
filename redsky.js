@@ -23,7 +23,7 @@ var redsky = {
                 return product_name;
             })
             .catch(function (err) {
-                console.log("DEBUG: error connecting to Red Sky API");
+                return err;
             });        
     }
 };

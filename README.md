@@ -10,7 +10,7 @@ On a Debian system with Node and npm in place, the following works:
     $ cd /location/of/this/repository
     # This will install the upstream dependencies in package.json
     $ npm install
-    $ node app.js
+    $ node server.js
 
 You should see "MyRetail pricing app is running." in the console.
 
@@ -35,10 +35,13 @@ Edit config.js with the hostname and path to your external API.
 
 ## Testing todo list
 
-- Check that we return a result even with partial information (missing
+Run the tests with `npm test`.
+
+- [x] Check that get returns something
+- [x] Check that we return a result even with partial information (missing
   price, missing name)
-- Check that the price information retrieved from the db is correct
-- Check that external product ID matches internal product ID in each
+- [ ] Check that the price information retrieved from the db is correct
+- [ ] Check that external product ID matches internal product ID in each
   response
 
 
