@@ -7,6 +7,16 @@ On a Debian system with Node and npm in place, the following works:
 
     $ sudo apt-get install mongodb nodejs npm
     
+## Config
+
+Set up your specific configuration in config.js.
+
+    $ cp config.js.tmpl config.js
+
+Edit config.js with the hostname and path to your external API.
+
+## Start application
+
     $ cd /location/of/this/repository
     # This will install the upstream dependencies in package.json
     $ npm install
@@ -24,14 +34,6 @@ with the application running, or run `curl
 http://localhost:3000/dbsetup`. You should see a set of product ids and
 prices.  This is the sample data which has been inserted into the
 database.
-
-## Config
-
-Set up your specific configuration in config.js.
-
-    $ cp config.js.tmpl config.js
-
-Edit config.js with the hostname and path to your external API.
 
 ## Update prices
 
