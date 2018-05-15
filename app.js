@@ -5,6 +5,8 @@ var redsky = require('./redsky');
 var rp = require('request-promise');
 var MongoClient = require('mongodb').MongoClient;
 
+app.use(express.json());
+
 app.get('/', (req, res) => res.send('To use this application, search by product ID at http://localhost:3000/products/:id.  Try 16696652 to start.'))
 
 app.route('/dbsetup')
@@ -106,11 +108,42 @@ app.route('/products/:id')
         )
     .put( function (req, res)
           {
-              // call a function to break up req and update price in
-              // Mongo
-
-              // send updated object back to caller
-              res.send("Updated");
+              var updated_price = req.body.updated_price;
+              var product_id = parseInt(req.params.id);
+              MongoClient.connect(config.db_url)
+                  .then( function( client ) {
+                      var db = client.db("productPrices");
+                      // TODO: Catch null updated_price
+                      return db.collection("productPrices").updateOne(
+                          { "product_id": product_id },
+                          { $set: {"current_price": updated_price} }
+                      );
+                  }).then (function (result) {
+                      if (result.matchedCount > 0 && result.modifiedCount > 0 ) {
+                          // Then we've updated the price
+                          res.send("Thanks!  Price update complete.");
+                          // A better solution here would be to send the
+                          // updated object back.
+                          }
+                      else if (result.matchedCount == 0) {
+                          error_message = {
+                              "error_text": "Sorry, we couldn't find a product with that ID to update.  Please check the ID and try again."
+                          }
+                          res.json(error_message);
+                      }
+                      else if (result.matchedCount > 0 && result.modifiedCount == 0) {
+                          error_message = {
+                              "error_text": "This product already has that price and does not need to be updated.  Thanks!"
+                          }
+                          res.json(error_message);
+                      }
+                  }).catch (function (err) {
+                      error_message = {
+                          "error_header": "Sorry, something went wrong.  Please contact the administrator.",
+                          "error_complete": err
+                      }
+                      res.json(error_message);
+                  });
           }
         )
 

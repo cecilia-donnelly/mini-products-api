@@ -33,6 +33,23 @@ Set up your specific configuration in config.js.
 
 Edit config.js with the hostname and path to your external API.
 
+## Update prices
+
+To update a price, send a `PUT` request to an endpoint with the given ID, like so:
+
+    $ curl -X PUT -H "Content-Type: application/json" -d @updated-price.json http://localhost:3000/products/16696652
+
+The contents of updated-price.json should look something like:
+
+```
+{
+    "updated_price": {
+        "value": "15.99",
+        "currency_code": "USD"
+    }
+}
+```
+
 ## Testing todo list
 
 Run the tests with `npm test`.
