@@ -32,7 +32,20 @@ describe('GET', function(done) {
                 expect(res.body.id).to.contain(test_product_id);
                 done();
             });
-    })
+    });
+
+    it('responds to invalid product id with empty name', function(done) {
+        // Product IDs should be integers for external source
+        invalid_product_id = 'asdf';
+        request(app)
+            .get('/products/' + invalid_product_id)
+            .set('Accept', 'text/json')
+            .expect(200)
+            .end(function(err, res) {
+                expect(res.body.name).to.equal("");
+                done();
+            });
+    });
 
 });
 

@@ -81,6 +81,11 @@ app.route('/products/:id')
                           config.redsky_path
                       )
                   }).then( function (name) {
+                      // Catch error from external source
+                      if (! name) {
+                          name = "";
+                      }
+                      
                       // Then bundle them together into a json object
                       product_object = {
                           "id":req.params.id,

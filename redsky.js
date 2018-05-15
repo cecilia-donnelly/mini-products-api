@@ -23,7 +23,7 @@ var redsky = {
                 return product_name;
             })
             .catch(function (err) {
-                return err;
+                return false;
             });        
     }
 };
